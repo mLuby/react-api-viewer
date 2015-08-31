@@ -27,14 +27,39 @@
     }
 
     makeRequest(url, function (data) {
-      console.log('cards',data.response)
       React.render(<App cards={data.response} />, document.body)
     })
 
     var App = React.createClass({
+      getInitialState(){
+        return {
+          filterText: ''
+        }
+      },
+
+      setFilterText(event){
+        this.setState({
+          filterText: event.target.value
+        })
+      },
+
+      filterCards(cards, filterText){
+        return filterText === '' ? cards : cards.filter(function(card){
+          return !~(card.title+card.tagline).indexOf(filterText)
+        })
+      },
+
+      renderFilter(){
+        return (
+          <div>
+            <input type='text' onChange={this.setFilterText} />
+            {'(try w)'}
+          </div>
+        )
+      },
+
       renderCards(){
-        console.log('this.props.cards', this.props.cards);
-        return this.props.cards.map(function(card){
+        return this.filterCards(this.props.cards, this.state.filterText).map(function(card){
           return (
             <a href={card.web_url}>
               <div>
@@ -50,6 +75,7 @@
       render(){
         return (
           <div>
+            {this.renderFilter()}
             {this.renderCards()}
           </div>
         )
