@@ -76,7 +76,7 @@
       },
 
       filterCards(cards, filterText){
-        return filterText === '' ? cards : cards.filter(card => !~(card.title+card.tagline).indexOf(filterText))
+        return filterText === '' ? cards : cards.filter(card => (card.title+card.tagline).toLowerCase().indexOf(filterText.toLowerCase())>-1)
       },
 
       renderFilter(){
